@@ -1,7 +1,6 @@
 package com.mszlu.blog.controller;
 
 
-import com.mszlu.blog.dao.pojo.Article;
 import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.PageParams;
@@ -28,7 +27,12 @@ public class ArticleController {
     @PostMapping
     public Result listArticle(@RequestBody PageParams pageParams){
          return articleService.listArticle(pageParams);
+    }
 
 
+    @PostMapping("hot")
+    public  Result hotArticle(){
+        int limit = 5;
+        return articleService.hotArticle(limit);
     }
 }
