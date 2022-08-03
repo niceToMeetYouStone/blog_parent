@@ -35,4 +35,9 @@ public class ArticleController {
         int limit = 5;
         return articleService.hotArticle(limit);
     }
+    @PostMapping("new")
+   public  Result newAtricle(){
+        int limit  = 5;
+        return articleService.newArticle(limit);
+   }
 }
