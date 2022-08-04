@@ -3,6 +3,8 @@ package com.mszlu.blog.dao.pojo;
 
 
 import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import lombok.Data;
 public class SysUser {
 
     // @JsonSerialize(using = ToStringSerializer.class)
+    @TableId(type= IdType.ASSIGN_ID)  //默认是雪花算法
     private Long id;
 
     private String account;

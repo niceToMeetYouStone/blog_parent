@@ -19,4 +19,11 @@ public interface LoginService {
      * @return
      */
     Result logout(String token);
+
+    /**
+     * 注册功能
+     * @param loginParams
+     * @return
+     */
+    Result register(LoginParams loginParams);
 }

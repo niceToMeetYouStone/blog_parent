@@ -9,10 +9,13 @@ import com.mszlu.blog.vo.ErrorCode;
 import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.LoginParams;
 import com.qiniu.util.StringUtils;
+import lombok.Data;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
     private UserService userService;
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
 
     @Override
@@ -46,8 +49,6 @@ public class LoginServiceImpl implements LoginService {
         if (sysUser == null) {
             return Result.fail(ErrorCode.ACCOUNT_PWD_NOT_EXIST.getCode(), ErrorCode.ACCOUNT_PWD_NOT_EXIST.getMsg());
         }
-
-        System.out.println(sysUser.toString());
         String token = JWTUtils.createToken(sysUser.getId());
         redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
 
@@ -61,5 +62,45 @@ public class LoginServiceImpl implements LoginService {
     public Result logout(String token) {
         redisTemplate.delete(token);
         return Result.success(null);
+    }
+
+    @Override
+    public Result register(LoginParams loginParams) {
+        /**
+         * 1.判断参数是否合法
+         * 2.判断账户是否存在，存在返回账户已经注册
+         * 3.如果账户不存在，注册用户
+         * 4.生成token，传入redis并返回
+         * 5.注意加上事务，一旦中间过程出现任何问题，要实现回滚
+         */
+        String account = loginParams.getAccount();
+        String password = loginParams.getPassword();
+        String nickname = loginParams.getNickname();
+
+        if (StringUtils.isNullOrEmpty(account) || StringUtils.isNullOrEmpty(password) || StringUtils.isNullOrEmpty(nickname)) {
+            return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
+        }
+        // 通过用户名查找用户
+        SysUser user = userService.findUserByAccount(account);
+        if (user != null) {
+            return Result.fail(ErrorCode.ACCOUNT_EXIST.getCode(), ErrorCode.ACCOUNT_EXIST.getMsg());
+        }
+        SysUser sysUser = new SysUser();
+        sysUser.setNickname(nickname);
+        sysUser.setAccount(account);
+        sysUser.setPassword(DigestUtils.md5Hex(password + slat));
+        sysUser.setCreateDate(System.currentTimeMillis());
+        sysUser.setLastLogin(System.currentTimeMillis());
+        sysUser.setAvatar("/static/img/logo.b3a48c0.png");
+        sysUser.setAdmin(1); //1 为true
+        sysUser.setDeleted(0); // 0 为false
+        sysUser.setSalt("");
+        sysUser.setStatus("");
+        sysUser.setEmail("");
+        // 保存用户
+        this.userService.save(sysUser);
+        String token = JWTUtils.createToken(sysUser.getId());
+        redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
+        return Result.success(token);
     }
 }

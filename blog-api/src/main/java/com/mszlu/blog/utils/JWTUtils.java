@@ -20,9 +20,8 @@ public class JWTUtils {
      * @return
      */
     public static String createToken(Long userId) {
-        // long userId1 = 100;
         // Map<String,Object> claims = new HashMap<>();
-        // claims.put("userId",userId1);
+        // claims.put("userId",userId);
         // JwtBuilder jwtBuilder = Jwts.builder()
         //         .signWith(SignatureAlgorithm.HS256, jwtToken)
         //         .setClaims(claims).setIssuedAt(new Date())

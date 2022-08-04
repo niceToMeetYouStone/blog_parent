@@ -13,11 +13,13 @@ import com.mysql.cj.x.protobuf.Mysqlx;
 import com.qiniu.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -67,5 +69,19 @@ public class UserServiceImpl implements UserService {
         loginUserVo.setAccount(sysUser.getAccount());
 
         return Result.success(loginUserVo);
+    }
+
+    @Override
+    public SysUser findUserByAccount(String account) {
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getAccount,account);
+        queryWrapper.last("limit 1");
+        return this.sysUserMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public void save(SysUser sysUser) {
+        //保存的id会自动生成，默认生成的id是雪花算法
+        this.sysUserMapper.insert(sysUser);
     }
 }
