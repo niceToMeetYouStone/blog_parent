@@ -45,7 +45,7 @@ public class LoginServiceImpl implements LoginService {
             return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
         }
         password = DigestUtils.md5Hex(password + slat);
-        SysUser sysUser = userService.findUser(account, password);
+        SysUser sysUser = this.userService.findUser(account, password);
         if (sysUser == null) {
             return Result.fail(ErrorCode.ACCOUNT_PWD_NOT_EXIST.getCode(), ErrorCode.ACCOUNT_PWD_NOT_EXIST.getMsg());
         }

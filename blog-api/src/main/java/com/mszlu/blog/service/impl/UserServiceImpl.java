@@ -27,13 +27,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TokenService tokenService;
 
-
     @Override
     public SysUser findUserById(Long userId) {
         SysUser sysUser = sysUserMapper.selectBatchIds(userId);
-        if(sysUser == null){
+        if (sysUser == null) {
             sysUser = new SysUser();
-            sysUser.setNickname("hellowWorld");
+            sysUser.setNickname("helloWorld");
         }
         return sysUser;
     }
@@ -41,10 +40,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public SysUser findUser(String account, String password) {
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysUser::getAccount,account);
-        queryWrapper.select(SysUser::getAccount,SysUser::getId,SysUser::getAvatar,SysUser::getNickname);
+        queryWrapper.eq(SysUser::getAccount, account);
+        queryWrapper.select(SysUser::getAccount, SysUser::getId, SysUser::getAvatar, SysUser::getNickname);
         queryWrapper.last("limit 1");
-       return  sysUserMapper.selectOne(queryWrapper);
+        return this.sysUserMapper.selectOne(queryWrapper);
     }
 
     @Override
@@ -59,8 +58,8 @@ public class UserServiceImpl implements UserService {
          */
 
         SysUser sysUser = tokenService.checkToken(token);
-        if(sysUser == null){
-            return Result.fail(ErrorCode.TOKEN_ERROR.getCode(),ErrorCode.TOKEN_ERROR.getMsg());
+        if (sysUser == null) {
+            return Result.fail(ErrorCode.TOKEN_ERROR.getCode(), ErrorCode.TOKEN_ERROR.getMsg());
         }
         LoginUserVo loginUserVo = new LoginUserVo();
         loginUserVo.setId(sysUser.getId());
@@ -74,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SysUser findUserByAccount(String account) {
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysUser::getAccount,account);
+        queryWrapper.eq(SysUser::getAccount, account);
         queryWrapper.last("limit 1");
         return this.sysUserMapper.selectOne(queryWrapper);
     }

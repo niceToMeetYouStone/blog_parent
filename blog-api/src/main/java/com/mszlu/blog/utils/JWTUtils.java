@@ -46,19 +46,19 @@ public class JWTUtils {
         //     return null;
         // }
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("1","admin");
+        Map<String, Object> map = new HashMap<>();
+        map.put("1", "admin");
         return map;
     }
 
-    @Test
-    public void mainTest() {
-        long num =1 ;
-        String token = JWTUtils.createToken(num);
-        System.out.println(token);
-        Map<String, Object> stringObjectMap = JWTUtils.checkToken(token);
-        System.out.println(stringObjectMap.get("userId"));
-    }
+    // @Test
+    // public void mainTest() {
+    //     long num =1 ;
+    //     String token = JWTUtils.createToken(num);
+    //     System.out.println(token);
+    //     Map<String, Object> stringObjectMap = JWTUtils.checkToken(token);
+    //     System.out.println(stringObjectMap.get("userId"));
+    // }
 
 
 }
