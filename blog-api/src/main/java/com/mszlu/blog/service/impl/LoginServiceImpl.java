@@ -4,20 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.service.LoginService;
 import com.mszlu.blog.service.UserService;
-import com.mszlu.blog.utils.JWTUtils;
+import com.mszlu.blog.utils.JwtUtils;
 import com.mszlu.blog.vo.ErrorCode;
 import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.LoginParams;
 import com.qiniu.util.StringUtils;
-import lombok.Data;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -49,12 +45,10 @@ public class LoginServiceImpl implements LoginService {
         if (sysUser == null) {
             return Result.fail(ErrorCode.ACCOUNT_PWD_NOT_EXIST.getCode(), ErrorCode.ACCOUNT_PWD_NOT_EXIST.getMsg());
         }
-        String token = JWTUtils.createToken(sysUser.getId());
-        redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
+        String token = JwtUtils.createToken(sysUser.getId());
+        this.redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
 
         return Result.success(token);
-
-
     }
 
 
@@ -99,7 +93,7 @@ public class LoginServiceImpl implements LoginService {
         sysUser.setEmail("");
         // 保存用户
         this.userService.save(sysUser);
-        String token = JWTUtils.createToken(sysUser.getId());
+        String token = JwtUtils.createToken(sysUser.getId());
         redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
         return Result.success(token);
     }

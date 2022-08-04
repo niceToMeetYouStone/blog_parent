@@ -4,6 +4,7 @@ package com.mszlu.blog.handler;
 import com.alibaba.fastjson.JSON;
 import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.service.TokenService;
+import com.mszlu.blog.utils.UserThreadLocal;
 import com.mszlu.blog.vo.ErrorCode;
 import com.mszlu.blog.vo.Result;
 import com.qiniu.util.StringUtils;
@@ -55,7 +56,14 @@ public class LoginInterceptor implements HandlerInterceptor {
             response.getWriter().print(JSON.toJSONString(result));
             return false;
         }
-        // 验证成功放行
+        // 直接获取用户信息，用threadlocal
+        UserThreadLocal.put(sysUser);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 如果不删除数据，会有内存泄漏的风险
+        UserThreadLocal.remove();
     }
 }

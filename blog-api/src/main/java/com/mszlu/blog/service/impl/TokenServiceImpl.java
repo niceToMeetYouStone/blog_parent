@@ -3,7 +3,7 @@ package com.mszlu.blog.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.service.TokenService;
-import com.mszlu.blog.utils.JWTUtils;
+import com.mszlu.blog.utils.JwtUtils;
 import com.qiniu.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,7 +24,7 @@ public class TokenServiceImpl implements TokenService {
             return null;
         }
 
-        Map<String, Object> map = JWTUtils.checkToken(token);
+        Map<String, Object> map = JwtUtils.checkToken(token);
         if(map == null){
             return null;
         }
