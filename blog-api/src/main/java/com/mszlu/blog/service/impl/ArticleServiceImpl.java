@@ -72,7 +72,6 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Result listArchives() {
         List<Archives>  archivesList= articleMapper.listArchives();
-        System.out.println(archivesList.toArray().toString());
         return Result.success(archivesList);
     }
 

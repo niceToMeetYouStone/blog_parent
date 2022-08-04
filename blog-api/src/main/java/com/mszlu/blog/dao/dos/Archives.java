@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Archives {
     private  int year;
-    private  int mounth;
+    private  int month;
     private Long count;
 
 }

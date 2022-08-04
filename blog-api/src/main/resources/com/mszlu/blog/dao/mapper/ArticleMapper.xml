@@ -5,7 +5,12 @@
 <mapper namespace="com.mszlu.blog.dao.mapper.ArticleMapper">
     <!--List<Archives> listArchives();-->
     <select id="listArchives" resultType="com.mszlu.blog.dao.dos.Archives">
-        select year(create_date) as year,month(create_date) as month, count(*) as count from ms_article
-        group by year,month
+        SELECT
+         FROM_UNIXTIME(create_date/1000,'%Y')  AS YEAR,
+            FROM_UNIXTIME(create_date/1000,'%m') AS MONTH,
+            count(*) AS count
+        FROM
+            ms_article
+        GROUP BY YEAR,MONTH
     </select>
 </mapper>

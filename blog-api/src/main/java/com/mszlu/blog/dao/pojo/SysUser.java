@@ -1,10 +1,15 @@
 package com.mszlu.blog.dao.pojo;
 
 
+
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 @Data
 public class SysUser {
+
+    // @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     private String account;
