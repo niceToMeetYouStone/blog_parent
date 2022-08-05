@@ -2,6 +2,7 @@ package com.mszlu.blog.service;
 
 import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.UserVo;
 
 public interface UserService {
     SysUser findUserById(Long userId);
@@ -27,6 +28,13 @@ public interface UserService {
      * @param sysUser
      */
     void save(SysUser sysUser);
+
+    /**
+     * t通过用户的id获取UserVo对象
+     * @param authorId
+     * @return
+     */
+    UserVo findUserVoById(Long authorId);
 }
 
 

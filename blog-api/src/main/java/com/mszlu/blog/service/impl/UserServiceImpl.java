@@ -9,8 +9,11 @@ import com.mszlu.blog.service.UserService;
 import com.mszlu.blog.vo.ErrorCode;
 import com.mszlu.blog.vo.LoginUserVo;
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.UserVo;
 import com.mysql.cj.x.protobuf.Mysqlx;
 import com.qiniu.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
+@Slf4j
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -82,5 +86,20 @@ public class UserServiceImpl implements UserService {
     public void save(SysUser sysUser) {
         //保存的id会自动生成，默认生成的id是雪花算法
         this.sysUserMapper.insert(sysUser);
+    }
+
+    @Override
+    public UserVo findUserVoById(Long authorId) {
+
+        SysUser sysUser = sysUserMapper.selectById(authorId);
+        UserVo userVo = new UserVo();
+        // 对于空的情况进行填充，防止前端报错
+        if (sysUser == null){
+            userVo.setId("1");
+            userVo.setNickname("评论大人");
+            userVo.setAvatar("哈哈");
+        }
+        BeanUtils.copyProperties(sysUser,userVo);
+        return userVo;
     }
 }
