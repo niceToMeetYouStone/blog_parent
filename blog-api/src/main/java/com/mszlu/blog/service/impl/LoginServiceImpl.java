@@ -45,7 +45,7 @@ public class LoginServiceImpl implements LoginService {
         if (sysUser == null) {
             return Result.fail(ErrorCode.ACCOUNT_PWD_NOT_EXIST.getCode(), ErrorCode.ACCOUNT_PWD_NOT_EXIST.getMsg());
         }
-        String token = JwtUtils.createToken(sysUser.getId());
+        String token = JwtUtils.createToken(Long.valueOf(sysUser.getId()));
         this.redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
 
         return Result.success(token);
@@ -93,7 +93,7 @@ public class LoginServiceImpl implements LoginService {
         sysUser.setEmail("");
         // 保存用户
         this.userService.save(sysUser);
-        String token = JwtUtils.createToken(sysUser.getId());
+        String token = JwtUtils.createToken(Long.valueOf(sysUser.getId()));
         redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
         return Result.success(token);
     }

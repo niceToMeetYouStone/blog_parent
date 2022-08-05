@@ -9,5 +9,10 @@ import java.util.List;
 public interface TagsService {
     List<TagVo> findTagsByArticleId(Long id);
 
+    /**
+     * 查询最热的标签的前n条
+     * @param limit
+     * @return
+     */
     Result hots(int limit);
 }

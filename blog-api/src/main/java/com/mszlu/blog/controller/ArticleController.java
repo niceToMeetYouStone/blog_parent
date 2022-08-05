@@ -5,11 +5,7 @@ import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.PageParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 
 //json数据进行交互
@@ -21,32 +17,44 @@ public class ArticleController {
 
     /**
      * 首页文章列表
+     *
      * @param pageParams
      * @return
      */
     @PostMapping
-    public Result listArticle(@RequestBody PageParams pageParams){
-         return articleService.listArticle(pageParams);
+    public Result listArticle(@RequestBody PageParams pageParams) {
+        return articleService.listArticle(pageParams);
     }
 
 
     @PostMapping("hot")
-    public  Result hotArticle(){
+    public Result hotArticle() {
         int limit = 5;
         return articleService.hotArticle(limit);
     }
+
     @PostMapping("new")
-   public  Result newAtricle(){
-        int limit  = 5;
+    public Result newAtricle() {
+        int limit = 5;
         return articleService.newArticle(limit);
-   }
+    }
 
     /**
      * 文章归档
+     *
      * @return
      */
     @PostMapping("listArchives")
-   public Result listArchives(){
+    public Result listArchives() {
         return articleService.listArchives();
-   }
+    }
+
+
+    @PostMapping("/view/{id}")
+    public Result findArticleById(@PathVariable("id") Long articleId){
+        return articleService.findArticleById(articleId);
+    }
+
+
+
 }

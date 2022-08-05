@@ -18,6 +18,5 @@ public class TagsController {
     public Result hot(){
         int limit = 6;
         return  tagsService.hots(limit);
-
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class ArticleVo {
-    private Long id;
+    private String id;
 
     private String title;
 
@@ -25,9 +25,9 @@ public class ArticleVo {
 
     private String author;
 
-    // private ArticleBodyVo body;
+    private ArticleBodyVo body;
 
     private List<TagVo> tags;
 
-    // private List<CategoryVo> categorys;
+    private CategoryVo category;
 }

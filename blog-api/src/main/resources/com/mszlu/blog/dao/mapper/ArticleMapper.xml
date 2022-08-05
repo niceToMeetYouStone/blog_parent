@@ -13,4 +13,5 @@
             ms_article
         GROUP BY YEAR,MONTH
     </select>
+
 </mapper>

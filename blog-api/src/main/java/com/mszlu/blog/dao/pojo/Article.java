@@ -9,7 +9,7 @@ public class Article {
 
     public static final int Article_Common = 0;
 
-    private Long id;
+    private String id;
 
     private String title;
 

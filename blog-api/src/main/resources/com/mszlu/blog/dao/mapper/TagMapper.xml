@@ -5,13 +5,13 @@
 <mapper namespace="com.mszlu.blog.dao.mapper.TagMapper">
     <!--List<Tag> findTagsByArticleId(Long id);-->
     <select id="findTagsByArticleId" parameterType="long" resultType="com.mszlu.blog.dao.pojo.Tag">
-
                 select id,avatar,tag_name as tagName from ms_tag
                 where id in
                 (select  tag_id from ms_article_tag where article_id=#{articleId})
 
     </select>
-    <select id="findTagsByArticleIds" parameterType="int" resultType="java.lang.Long">
+
+    <select id="findTagsByArticleIds" parameterType="int" resultType="com.mszlu.blog.dao.pojo.Tag">
 
                 select tag_id from ms_article_tag group by tag_id order by count(1) desc limit #{limit}
 
@@ -23,5 +23,10 @@
         <foreach collection="tagIds" item="tagId" separator="," open="(" close=")">
             #{tagId}
         </foreach>
+
+    </select>
+
+    <select id="findHotsTagIds" parameterType="int" resultType="java.lang.Long">
+        select tag_id from ms_article_tag group by tag_id order by count(*) desc limit #{limit};
     </select>
 </mapper>

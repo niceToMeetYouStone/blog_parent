@@ -21,7 +21,7 @@ public interface TagMapper extends BaseMapper<Tag> {
      * @param limit
      * @return
      */
-    List<Long> findTagsByArticleIds(int limit);
+    List<Tag> findTagsByArticleIds(int limit);
 
 
     /**
@@ -30,4 +30,11 @@ public interface TagMapper extends BaseMapper<Tag> {
      * @return
      */
     List<Tag> findTagsByTagIds(List<Long> tagIds);
+
+    /**
+     * 查找最热标签
+     * @param limit
+     * @return
+     */
+    List<Long> findHotsTagIds(int limit);
 }

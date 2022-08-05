@@ -38,7 +38,7 @@ public class TagsServiceImpl implements TagsService {
          * 标签所拥有的文章数量最多
          * 查询根据tag_id分组，从大到小排列
          */
-        List<Long> tagIds = tagMapper.findTagsByArticleIds(limit);
+        List<Long> tagIds = tagMapper.findHotsTagIds(limit);
         // 需求的tag的id和nam
         // 当结果为空时
         if(CollectionUtils.isEmpty(tagIds)){
@@ -48,6 +48,12 @@ public class TagsServiceImpl implements TagsService {
         return  Result.success(tagList);
     }
 
+
+    /**
+     * 对返回数据进行封装
+     * @param tags
+     * @return
+     */
     private List<TagVo> copyList(List<Tag> tags) {
         List<TagVo> tagVoList = new ArrayList<>();
         for (Tag tag : tags) {

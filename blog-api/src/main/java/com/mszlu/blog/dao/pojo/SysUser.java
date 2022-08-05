@@ -13,7 +13,7 @@ public class SysUser {
 
     // @JsonSerialize(using = ToStringSerializer.class)
     // @TableId(type= IdType.ASSIGN_ID)  //默认是雪花算法
-    private Long id;
+    private String id;
 
     private String account;
 
