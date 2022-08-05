@@ -1,6 +1,7 @@
 package com.mszlu.blog.service;
 
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.params.CommentParams;
 
 public interface CommentsService {
 
@@ -9,5 +10,13 @@ public interface CommentsService {
      * @param id
      * @return
      */
-    Result commentByArtileId(Long id);
+    Result commentByArticleId(Long id);
+
+
+    /**
+     * 写评论
+     * @param commentParams
+     * @return
+     */
+    Result comment(CommentParams commentParams);
 }
