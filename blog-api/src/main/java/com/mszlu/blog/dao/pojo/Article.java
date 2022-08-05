@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 public class Article {
-    public static final int Article_TOP = 1;
+    public static final Integer Article_TOP = 1;
 
-    public static final int Article_Common = 0;
+    public static final Integer Article_Common = 0;
 
     private String id;
 
@@ -35,7 +35,7 @@ public class Article {
     /**
      * 置顶
      */
-    private int weight = Article_Common;
+    private int weight;
 
 
     /**
