@@ -7,10 +7,7 @@ import com.mszlu.blog.dao.mapper.ArticleBodyMapper;
 import com.mszlu.blog.dao.mapper.ArticleMapper;
 import com.mszlu.blog.dao.pojo.Article;
 import com.mszlu.blog.dao.pojo.ArticleBody;
-import com.mszlu.blog.service.ArticleService;
-import com.mszlu.blog.service.CategoryService;
-import com.mszlu.blog.service.TagsService;
-import com.mszlu.blog.service.UserService;
+import com.mszlu.blog.service.*;
 import com.mszlu.blog.vo.ArticleBodyVo;
 import com.mszlu.blog.vo.ArticleVo;
 import com.mszlu.blog.vo.Result;
@@ -36,6 +33,8 @@ public class ArticleServiceImpl implements ArticleService {
     private UserService userService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ThreadServices threadServices;
 
 
 
@@ -94,6 +93,15 @@ public class ArticleServiceImpl implements ArticleService {
        Article article = articleMapper.selectById(articleId);
        log.info("article:"+article.toString());
         ArticleVo  articleVo = copy(article,true,true,true,true);
+        /**
+         * 查看文章后，新增阅读操作
+         * 增加了更新操作，是有写锁的
+         * 增加了此次操作的耗时 如果一段更新出问题不能影响文章的查看操作
+         * 线程池结束解决
+         * 可以把更新操作扔到线程池中执行，和主线程不相关了
+         */
+
+        threadServices.updateArtileViewCont(articleMapper,article);
         return Result.success(articleVo);
     }
 
