@@ -1,6 +1,7 @@
 package com.mszlu.blog.controller;
 
 
+import com.mszlu.blog.common.aop.LogAnnotation;
 import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.PageParams;
@@ -21,6 +22,7 @@ public class ArticleController {
      * @param pageParams
      * @return
      */
+    @LogAnnotation(module = "文章",operation = "展示文章列表")
     @PostMapping
     public Result listArticle(@RequestBody PageParams pageParams) {
         return articleService.listArticle(pageParams);

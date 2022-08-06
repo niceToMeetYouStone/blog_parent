@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         UserVo userVo = new UserVo();
         // 对于空的情况进行填充，防止前端报错
         if (sysUser == null){
-            userVo.setId("1");
+            userVo.setId(1L);
             userVo.setNickname("评论大人");
             userVo.setAvatar("哈哈");
         }

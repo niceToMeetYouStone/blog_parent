@@ -4,16 +4,18 @@ package com.mszlu.blog.dao.pojo;
 
 
 
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 @Data
 public class SysUser {
 
-    // @JsonSerialize(using = ToStringSerializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     // @TableId(type= IdType.ASSIGN_ID)  //默认是雪花算法
-    private String id;
+    private Long id;
 
     private String account;
 

@@ -71,7 +71,7 @@ public class CommentsServiceImpl implements CommentsService {
         //子评论
         Integer level = comment.getLevel();
         if(level== 1){
-            String id = comment.getId();
+            Long id = comment.getId();
             List<CommentVo> commentVoList = findCommentsParentId(id);
             commentVo.setChildren(commentVoList);
         }
@@ -91,7 +91,7 @@ public class CommentsServiceImpl implements CommentsService {
      * @param id
      * @return
      */
-    private List<CommentVo> findCommentsParentId(String id) {
+    private List<CommentVo> findCommentsParentId(Long id) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.eq(Comment::getParentId,id);
         queryWrapper.eq(Comment::getLevel,2);
