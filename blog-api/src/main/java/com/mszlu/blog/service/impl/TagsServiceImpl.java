@@ -55,6 +55,21 @@ public class TagsServiceImpl implements TagsService {
         return Result.success(tags);
     }
 
+    @Override
+    public Result findAllDetail() {
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        List<Tag> tags = tagMapper.selectList(queryWrapper);
+        return Result.success(copyList(tags));
+    }
+
+    @Override
+    public Result findDetailById(Long id) {
+        TagVo tagVo = new TagVo();
+        Tag tag = tagMapper.selectById(id);
+        BeanUtils.copyProperties(tag,tagVo);
+        return Result.success(tagVo);
+    }
+
 
     /**
      * 对返回数据进行封装

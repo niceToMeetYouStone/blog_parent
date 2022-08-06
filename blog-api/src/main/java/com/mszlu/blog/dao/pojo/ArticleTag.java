@@ -10,6 +10,6 @@ public class ArticleTag {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long articleId;
-    private String tagId;
+    private Long tagId;
 
 }
