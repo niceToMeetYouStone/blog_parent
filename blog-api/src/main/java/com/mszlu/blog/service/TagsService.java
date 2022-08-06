@@ -17,7 +17,7 @@ public interface TagsService {
     Result hots(int limit);
 
     /**
-     * 查询所有的标签
+     * 所有的标签
      * @return
      */
     Result findAll();

@@ -129,7 +129,7 @@ public class CommentsServiceImpl implements CommentsService {
      * @param id
      * @return
      */
-    private List<CommentVo> findCommentsParentId(Long id) {
+    private List<CommentVo> findCommentsParentId( Long id) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.eq(Comment::getParentId, id);
         queryWrapper.eq(Comment::getLevel, 2);

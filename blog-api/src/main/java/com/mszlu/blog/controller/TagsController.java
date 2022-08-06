@@ -15,12 +15,10 @@ public class TagsController {
 
 
 
-
     @GetMapping
     public  Result findAll(){
         return tagsService.findAll();
     }
-
 
     @GetMapping("hot")
     public Result hot(){
