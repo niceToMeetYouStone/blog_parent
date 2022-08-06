@@ -42,6 +42,7 @@ public class LoginServiceImpl implements LoginService {
         }
         password = DigestUtils.md5Hex(password + slat);
         SysUser sysUser = this.userService.findUser(account, password);
+        System.out.println("存入用户 sysUser" + sysUser);
         if (sysUser == null) {
             return Result.fail(ErrorCode.ACCOUNT_PWD_NOT_EXIST.getCode(), ErrorCode.ACCOUNT_PWD_NOT_EXIST.getMsg());
         }

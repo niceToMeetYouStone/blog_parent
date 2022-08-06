@@ -5,18 +5,25 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mszlu.blog.dao.dos.Archives;
 import com.mszlu.blog.dao.mapper.ArticleBodyMapper;
 import com.mszlu.blog.dao.mapper.ArticleMapper;
+import com.mszlu.blog.dao.mapper.ArticleTagMapper;
 import com.mszlu.blog.dao.pojo.Article;
 import com.mszlu.blog.dao.pojo.ArticleBody;
+import com.mszlu.blog.dao.pojo.ArticleTag;
+import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.service.*;
+import com.mszlu.blog.utils.UserThreadLocal;
 import com.mszlu.blog.vo.ArticleBodyVo;
 import com.mszlu.blog.vo.ArticleVo;
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.TagVo;
+import com.mszlu.blog.vo.params.ArticleParam;
 import com.mszlu.blog.vo.params.PageParams;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +42,8 @@ public class ArticleServiceImpl implements ArticleService {
     private CategoryService categoryService;
     @Autowired
     private ThreadServices threadServices;
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
 
 
@@ -105,6 +114,50 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(articleVo);
     }
 
+    @Override
+    @Transactional
+    public Result publish(ArticleParam articleParam) {
+        Article  article = new Article();
+        SysUser sysUser = UserThreadLocal.get();
+        log.info("写文章 sysUser：" + sysUser);
+        article.setAuthorId(sysUser.getId());
+        article.setCategoryId(articleParam.getCategory().getId());
+        article.setCreateDate(System.currentTimeMillis());
+        article.setSummary(articleParam.getSummary());
+        article.setTitle(articleParam.getTitle());
+        article.setViewCounts(0);
+        article.setWeight(Article.Article_Common);
+        article.setBodyId(-1L);
+        this.articleMapper.insert(article);
+
+
+        // tags
+        List<TagVo> tags = articleParam.getTags();
+        if(tags != null){
+            for (TagVo tag : tags) {
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setArticleId(article.getId());
+                articleTag.setTagId(tag.getId());
+
+                this.articleTagMapper.insert(articleTag);
+            }
+        }
+
+        ArticleBody  articleBody = new ArticleBody();
+        articleBody.setContent(articleParam.getBody().getContent());
+        articleBody.setContentHtml(articleParam.getBody().getContentHtml());
+        articleBody.setArticleId(article.getId());
+        articleBodyMapper.insert(articleBody);
+
+
+        article.setBodyId(articleBody.getId());
+        articleMapper.updateById(article);
+        ArticleVo articleVo = new ArticleVo();
+        articleVo.setId(article.getId());
+        return Result.success(articleVo);
+
+    }
+
     @Autowired
     private ArticleBodyMapper articleBodyMapper;
     private ArticleBodyVo findBodyById(Long bodyId) {
@@ -138,15 +191,15 @@ public class ArticleServiceImpl implements ArticleService {
             articleVo.setTags(tagsService.findTagsByArticleId(articleId));
         }
         if (isAuthor){
-            Long authorId = article.getAuthorId();
+            Long authorId = Long.valueOf(article.getAuthorId());
             articleVo.setAuthor(userService.findUserById(authorId).getNickname());
         }
         if (isBody){
-            Long boyId = article.getBodyId();
+            Long boyId = Long.valueOf(article.getBodyId());
             articleVo.setBody(findBodyById(boyId));
         }
         if(isCategory){
-            Long categoryId = article.getCategoryId();
+            Long categoryId = Long.valueOf(article.getCategoryId());
             articleVo.setCategory(categoryService.findCategoryById(categoryId));
         }
         return articleVo;

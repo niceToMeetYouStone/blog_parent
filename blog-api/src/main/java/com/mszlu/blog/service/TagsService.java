@@ -15,4 +15,10 @@ public interface TagsService {
      * @return
      */
     Result hots(int limit);
+
+    /**
+     * 查询所有的标签
+     * @return
+     */
+    Result findAll();
 }

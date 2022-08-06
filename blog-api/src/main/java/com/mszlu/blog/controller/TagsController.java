@@ -14,9 +14,18 @@ public class TagsController {
     private TagsService tagsService;
 
 
+
+
+    @GetMapping
+    public  Result findAll(){
+        return tagsService.findAll();
+    }
+
+
     @GetMapping("hot")
     public Result hot(){
         int limit = 6;
         return  tagsService.hots(limit);
     }
+
 }

@@ -1,6 +1,8 @@
 package com.mszlu.blog.dao.pojo;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 @Data
@@ -9,33 +11,35 @@ public class Article {
 
     public static final Integer Article_Common = 0;
 
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     private String title;
 
     private String summary;
 
-    private int commentCounts;
+    private Integer commentCounts;
 
-    private int viewCounts;
+    private Integer viewCounts;
 
     /**
      * 作者id
      */
-    private Long authorId;
+    private String authorId;
     /**
      * 内容id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long bodyId;
     /**
      * 类别id
      */
-    private Long categoryId;
+    private String categoryId;
 
     /**
      * 置顶
      */
-    private int weight;
+    private Integer weight;
 
 
     /**
