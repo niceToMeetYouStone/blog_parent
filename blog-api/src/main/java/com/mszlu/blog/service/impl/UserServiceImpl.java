@@ -43,13 +43,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SysUser findUser(String account, String password) {
-        System.out.println("---------------------"+account+"------------"+password);
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysUser::getAccount, account);
         queryWrapper.eq(SysUser::getPassword,password);
         queryWrapper.select(SysUser::getAccount, SysUser::getId, SysUser::getAvatar, SysUser::getNickname);
         queryWrapper.last("limit 1");
-        System.out.println("-------------------------------------");
         return this.sysUserMapper.selectOne(queryWrapper);
     }
 
@@ -96,11 +94,15 @@ public class UserServiceImpl implements UserService {
         SysUser sysUser = sysUserMapper.selectById(authorId);
         UserVo userVo = new UserVo();
         // 对于空的情况进行填充，防止前端报错
+
         if (sysUser == null){
-            userVo.setId("1");
-            userVo.setNickname("评论大人");
-            userVo.setAvatar("哈哈");
+            sysUser = new SysUser();
+            sysUser.setId(100L);
+            sysUser.setNickname("评论大人");
+            sysUser.setAvatar("哈哈");
         }
+        System.out.println("===================sysUser: "+sysUser.toString());
+        log.info("===================sysUser: "+sysUser.toString());
         BeanUtils.copyProperties(sysUser,userVo);
         return userVo;
     }

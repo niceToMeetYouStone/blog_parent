@@ -25,7 +25,7 @@ public class Article {
     /**
      * 作者id
      */
-    private String authorId;
+    private Long authorId;
     /**
      * 内容id
      */
@@ -34,7 +34,7 @@ public class Article {
     /**
      * 类别id
      */
-    private String categoryId;
+    private Long categoryId;
 
     /**
      * 置顶
