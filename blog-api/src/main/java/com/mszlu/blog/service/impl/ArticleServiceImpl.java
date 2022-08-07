@@ -1,6 +1,7 @@
 package com.mszlu.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mszlu.blog.dao.dos.Archives;
 import com.mszlu.blog.dao.mapper.ArticleBodyMapper;
@@ -57,40 +58,44 @@ public class ArticleServiceImpl implements ArticleService {
         /**
          * 分页查询article数据表
          */
-        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        if (pageParams.getCategoryId() != null) {
-            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
-        }
-        List<Long> articleIdList = new ArrayList();
-        if (pageParams.getTagId() != null) {
-            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
-            List<ArticleTag> articleTagList = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
-            for (ArticleTag articleTag : articleTagList) {
-                articleIdList.add(articleTag.getArticleId());
-            }
-        }
-        if (articleIdList.size() > 0) {
-            queryWrapper.in(Article::getId, articleIdList);
-        }
-        //对显示页面的年月分类进行过滤
-        if(pageParams.getYear()!=null && pageParams.getMonth() !=null){
-            Integer year = pageParams.getYear();
-            Integer month = pageParams.getMonth();
-            articleIdList = articleMapper.findArticleByYearAndMonth(year, month);
-        }
-        if(articleIdList.size()>0){
-            queryWrapper.in(Article::getId,articleIdList);
-        }
+        // Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+        // LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        // if (pageParams.getCategoryId() != null) {
+        //     queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+        // }
+        // List<Long> articleIdList = new ArrayList();
+        // if (pageParams.getTagId() != null) {
+        //     LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //     articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
+        //     List<ArticleTag> articleTagList = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+        //     for (ArticleTag articleTag : articleTagList) {
+        //         articleIdList.add(articleTag.getArticleId());
+        //     }
+        // }
+        // if (articleIdList.size() > 0) {
+        //     queryWrapper.in(Article::getId, articleIdList);
+        // }
+        // //对显示页面的年月分类进行过滤
+        // if(pageParams.getYear()!=null && pageParams.getMonth() !=null){
+        //     Integer year = pageParams.getYear();
+        //     Integer month = pageParams.getMonth();
+        //     articleIdList = articleMapper.findArticleByYearAndMonth(year, month);
+        // }
+        // if(articleIdList.size()>0){
+        //     queryWrapper.in(Article::getId,articleIdList);
+        // }
+        //
+        // // 是否置顶排序
+        // queryWrapper.orderByDesc(Article::getWeight, Article::getCreateDate);
+        // Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
+        // List<Article> records = articlePage.getRecords();
+        // // 当前数据为数据库返回数据，需要进行封装
+        // List<ArticleVo> articleVoList = copyList(records, true, true, false, false);
+        // return Result.success(articleVoList);
 
-        // 是否置顶排序
-        queryWrapper.orderByDesc(Article::getWeight, Article::getCreateDate);
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-        List<Article> records = articlePage.getRecords();
-        // 当前数据为数据库返回数据，需要进行封装
-        List<ArticleVo> articleVoList = copyList(records, true, true, false, false);
-        return Result.success(articleVoList);
+        Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
+        IPage<Article> articleIPage =  this.articleMapper.listArticle(page,pageParams.getCategoryId(),pageParams.getTagId(),pageParams.getYear(),pageParams.getMonth());
+        return Result.success(copyList(articleIPage.getRecords(),true,true,true,true));
     }
 
     @Override
