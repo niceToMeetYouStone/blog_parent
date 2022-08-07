@@ -11,4 +11,5 @@ import java.util.List;
 public interface ArticleMapper extends BaseMapper<Article> {
 
     List<Archives> listArchives();
+    List<Long> findArticleByYearAndMonth(Integer year,Integer month);
 }
