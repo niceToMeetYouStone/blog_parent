@@ -54,14 +54,33 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public Result listArticle(PageParams pageParams) {
+        /**
+         * 分页查询article数据表
+         */
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        if(pageParams.getCategoryId() !=null){
+            queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
+        }
+        List<Long> articleIdList = new ArrayList();
+        if(pageParams.getTagId()!=null){
+            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            articleTagLambdaQueryWrapper.eq(ArticleTag::getArticleId,pageParams.getTagId());
+            List<ArticleTag> articleTagList = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+            for (ArticleTag articleTag : articleTagList) {
+                articleIdList.add(articleTag.getArticleId());
+            }
+            if(articleIdList.size()>0){
+                queryWrapper.in(Article::getId,articleIdList);
+            }
+
+        }
         // 是否置顶排序
         queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
         Page<Article> articlePage = articleMapper.selectPage(page,queryWrapper);
         List<Article> records = articlePage.getRecords();
         // 当前数据为数据库返回数据，需要进行封装
-        List<ArticleVo> articleVoList = copyList(records,false,false,false,false);
+        List<ArticleVo> articleVoList = copyList(records,true,true,false,false);
         return Result.success(articleVoList);
     }
 
