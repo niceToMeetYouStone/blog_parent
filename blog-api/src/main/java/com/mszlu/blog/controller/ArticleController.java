@@ -1,6 +1,7 @@
 package com.mszlu.blog.controller;
 
 
+import com.mszlu.blog.cache.Cache;
 import com.mszlu.blog.common.aop.LogAnnotation;
 import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.vo.Result;
@@ -30,7 +31,9 @@ public class ArticleController {
     }
 
 
+
     @PostMapping("hot")
+    @Cache(expire = 5 * 60 * 1000,name = "hot_article")
     public Result hotArticle() {
         int limit = 5;
         return articleService.hotArticle(limit);
